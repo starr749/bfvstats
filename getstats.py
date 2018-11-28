@@ -1,5 +1,4 @@
-import requests
-import datetime
+import requests, datetime, json, os, io
 from html.parser import HTMLParser
 from string import Template
 
@@ -8,7 +7,7 @@ class MyHTMLParser(HTMLParser):
     tags = []
     thingsWeCareAbout = ['Score/min', 'K/D', 'Kills/min', 'Win %']
     currentDataKey = ''
-    bfData = {'Date': datetime.datetime.today().strftime('%m/%d/%Y')}
+    bfData = {}
 
     def handle_starttag(self, tag, attrs):
 
@@ -40,6 +39,19 @@ class MyHTMLParser(HTMLParser):
                 self.currentDataKey = data.strip()
 
 
+def save_file(new_json_data):
+    if os.path.isfile('./stats.json'):
+        with open('stats.json') as json_file:
+            json_data = json.load(json_file)
+            for k, v in new_json_data.items():
+                json_data[k] = v
+    else:
+        json_data = new_json_data
+
+    with io.open('stats.json', 'w') as outfile:
+        json.dump(json_data, outfile)
+
+
 def main():
     proxy = ''
 
@@ -63,7 +75,11 @@ def main():
     parser = MyHTMLParser()
     parser.feed(html)
 
-    print(parser.bfData)
+    dated_data = {datetime.datetime.today().strftime('%m/%d/%Y'): parser.bfData}
+
+    print(dated_data)
+
+    save_file(dated_data)
 
 
 if __name__ == "__main__":
