@@ -11,10 +11,10 @@ def read_json():
     return json_data
 
 
-def normalize(data_list):
+def normalize(data_list, normal_max=1):
     normal_list = []
     for x in data_list:
-        normal_list.append((((x - min(data_list))) / (max(data_list) - min(data_list))))
+        normal_list.append((((x - min(data_list))) / (max(data_list) - min(data_list))) * normal_max)
     return normal_list
 
 
@@ -37,14 +37,17 @@ def main():
 
     print(dates, score_min, kd, kills_min, win_percent)
 
-    # we want to normalize the data score/min data to fit between 1 and 0
-    score_min_normal = normalize(score_min)
-
-    # check if we want to normalize everything
+    # check if we want to normalize everything 0-100 is most interesting
     if len(sys.argv) > 1 and sys.argv[1] == 'normalize':
-        kd = normalize(kd)
-        kills_min = normalize(kills_min)
-        win_percent = normalize(win_percent)
+        score_min_normal = normalize(score_min, 100)
+        kd = normalize(kd, 100)
+        kills_min = normalize(kills_min, 100)
+        win_percent = normalize(win_percent, 100)
+
+    # If we're not normalizing everything,
+    # We want to normalize the data score/min data to fit between 1 and 0
+    else:
+        score_min_normal = normalize(score_min)
 
     score_trace = go.Scatter(
         x=dates,
