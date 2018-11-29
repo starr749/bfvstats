@@ -1,8 +1,8 @@
-import plotly.plotly as py
+from collections import OrderedDict
+from datetime import datetime
 import plotly.graph_objs as go
 from plotly.offline import plot
 import json
-
 
 def read_json():
     with open('stats.json') as json_file:
@@ -18,6 +18,7 @@ def main():
     win_percent = []
 
     json_data = read_json()
+    json_data = OrderedDict(sorted(json_data.items(), key=lambda t: datetime.strptime(t[0], '%m/%d/%Y')))
 
     for date, stats in json_data.items():
         dates.append(date)
