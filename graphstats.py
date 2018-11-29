@@ -11,6 +11,13 @@ def read_json():
     return json_data
 
 
+def normalize(data_list):
+    normal_list = []
+    for x in data_list:
+        normal_list.append((((x - min(data_list))) / (max(data_list) - min(data_list))))
+    return normal_list
+
+
 def main():
     dates = []
     score_min = []
@@ -23,18 +30,21 @@ def main():
 
     for date, stats in json_data.items():
         dates.append(date)
-        score_min.append(float(stats['Score/min']) / 300)  # Dividing by 300 to get the number small
+        score_min.append(float(stats['Score/min']))
         kd.append(stats['K/D'])
         kills_min.append(stats['Kills/min'])
         win_percent.append(float(stats['Win %'].strip('%')) / 100)
 
     print(dates, score_min, kd, kills_min, win_percent)
 
+    # we want to normalize the data score/min data to fit between 1 and 0
+    score_min_normal = normalize(score_min)
+
     score_trace = go.Scatter(
         x=dates,
-        y=score_min,
+        y=score_min_normal,
         mode='lines',
-        name='Score / Min ( / 300)'
+        name='Score / Min (Normalized)'
     )
 
     kd_trace = go.Scatter(
