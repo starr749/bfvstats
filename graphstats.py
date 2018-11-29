@@ -2,7 +2,7 @@ from collections import OrderedDict
 from datetime import datetime
 import plotly.graph_objs as go
 from plotly.offline import plot
-import json
+import json, sys
 
 
 def read_json():
@@ -31,14 +31,20 @@ def main():
     for date, stats in json_data.items():
         dates.append(date)
         score_min.append(float(stats['Score/min']))
-        kd.append(stats['K/D'])
-        kills_min.append(stats['Kills/min'])
+        kd.append(float(stats['K/D']))
+        kills_min.append(float(stats['Kills/min']))
         win_percent.append(float(stats['Win %'].strip('%')) / 100)
 
     print(dates, score_min, kd, kills_min, win_percent)
 
     # we want to normalize the data score/min data to fit between 1 and 0
     score_min_normal = normalize(score_min)
+
+    # check if we want to normalize everything
+    if len(sys.argv) > 1 and sys.argv[1] == 'normalize':
+        kd = normalize(kd)
+        kills_min = normalize(kills_min)
+        win_percent = normalize(win_percent)
 
     score_trace = go.Scatter(
         x=dates,
