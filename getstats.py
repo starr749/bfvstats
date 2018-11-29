@@ -1,6 +1,8 @@
 import requests, datetime, json, os, io
 from html.parser import HTMLParser
 from string import Template
+from collections import OrderedDict
+
 
 class MyHTMLParser(HTMLParser):
     parsedString = ''
@@ -45,6 +47,7 @@ def save_file(new_json_data):
             json_data = json.load(json_file)
             for k, v in new_json_data.items():
                 json_data[k] = v
+            json_data = OrderedDict(sorted(json_data.items(), key=lambda t: datetime.datetime.strptime(t[0], '%m/%d/%Y')))
     else:
         json_data = new_json_data
 

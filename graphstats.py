@@ -4,6 +4,7 @@ import plotly.graph_objs as go
 from plotly.offline import plot
 import json
 
+
 def read_json():
     with open('stats.json') as json_file:
         json_data = json.load(json_file)
@@ -30,36 +31,37 @@ def main():
     print(dates, score_min, kd, kills_min, win_percent)
 
     score_trace = go.Scatter(
-        x = dates,
-        y = score_min,
-        mode = 'lines',
-        name = 'Score / Min ( / 300)'
+        x=dates,
+        y=score_min,
+        mode='lines',
+        name='Score / Min ( / 300)'
     )
 
     kd_trace = go.Scatter(
-        x = dates,
-        y = kd,
-        mode = 'lines',
-        name = 'K/D'
+        x=dates,
+        y=kd,
+        mode='lines',
+        name='K/D'
     )
 
     kills_trace = go.Scatter(
-        x = dates,
-        y = kills_min,
-        mode = 'lines',
-        name = 'Kills / Min'
+        x=dates,
+        y=kills_min,
+        mode='lines',
+        name='Kills / Min'
     )
 
     win_trace = go.Scatter(
-        x = dates,
-        y = win_percent,
-        mode = 'lines',
-        name = 'Win %'
+        x=dates,
+        y=win_percent,
+        mode='lines',
+        name='Win %'
     )
 
     graph_data = [score_trace, kd_trace, kills_trace, win_trace]
 
-    plot(graph_data, filename='bfv-stat')
+    plot(graph_data, filename='bfv-stat.html')
+
 
 if __name__ == "__main__":
     main()
