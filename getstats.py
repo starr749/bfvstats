@@ -41,6 +41,7 @@ class MyHTMLParser(HTMLParser):
                 self.currentDataKey = data.strip()
 
 
+
 def save_file(new_json_data):
     if os.path.isfile('./stats.json'):
         with open('stats.json') as json_file:
@@ -57,14 +58,11 @@ def save_file(new_json_data):
 
 def main(args):
 
-    override_proxy = ''
+    default_proxy = ''
     url_template = Template('https://battlefieldtracker.com/bfv/profile/origin/$userTag/overview')
 
-    print(args.bfv_tag)
-    print(args)
-
     url = url_template.substitute(userTag=args.bfv_tag)
-    proxy = override_proxy if args.proxy is None else args.proxy
+    proxy = default_proxy if args.proxy is None else args.proxy
 
     proxy_dict = {
         "http": proxy,
