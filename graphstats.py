@@ -37,7 +37,7 @@ def main():
 
     print(dates, score_min, kd, kills_min, win_percent)
 
-    # check if we want to normalize everything 0-100 is most interesting
+    # check if we want to normalize everything. 0-100 is most interesting
     if len(sys.argv) > 1 and sys.argv[1] == 'normalize':
         score_min_normal = normalize(score_min, 100)
         kd = normalize(kd, 100)

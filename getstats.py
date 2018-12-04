@@ -1,4 +1,4 @@
-import requests, datetime, json, os, io
+import requests, datetime, json, os, io, argparse
 from html.parser import HTMLParser
 from string import Template
 from collections import OrderedDict
@@ -55,20 +55,22 @@ def save_file(new_json_data):
         json.dump(json_data, outfile)
 
 
-def main():
-    proxy = ''
+def main(args):
+
+    override_proxy = ''
+    url_template = Template('https://battlefieldtracker.com/bfv/profile/origin/$userTag/overview')
+
+    print(args.bfv_tag)
+    print(args)
+
+    url = url_template.substitute(userTag=args.bfv_tag)
+    proxy = override_proxy if args.proxy is None else args.proxy
 
     proxy_dict = {
         "http": proxy,
         "https": proxy,
         "ftp": proxy
     }
-
-    url_template = Template('https://battlefieldtracker.com/bfv/profile/origin/$userTag/overview')
-
-    bfv_tag = input('Enter bfv username / gamer tag: ')
-
-    url = url_template.substitute(userTag=bfv_tag)
 
     if proxy == '':
         html = requests.get(url).text
@@ -86,4 +88,10 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument("--proxy", dest="proxy", help="Http Proxy")
+    parser.add_argument("bfv_tag", help="Your BFV Username or battletag")
+    args = parser.parse_args()
+
+    main(args)
